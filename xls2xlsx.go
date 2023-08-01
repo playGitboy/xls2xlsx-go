@@ -12,6 +12,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+var existSheet1 bool
 func main() {
 	fmt.Print("---------------------------------------------------\n批量转换xls文件为xlsx（不依赖本机Office/WPS）\n放到xls文件所在目录，双击执行即可\n\n也可以命令行执行：\nxls2xlsx <xls文件所在目录>  \n---------------------------------------------------\n")
 	var xlsfilepath string
@@ -62,7 +63,6 @@ func xls2xlsx(xlsfile string) {
 	for i := 0; i < wb1.GetNumberSheets(); i++ {
 		ws1, _ := wb1.GetSheet(i)
 		f2.NewSheet(ws1.GetName())
-		f2.DeleteSheet("Sheet1") //NewFile默认新建的Sheet1(必须填写新Sheet后才生效)
 		maxrows := ws1.GetNumberRows()
 		for r := 0; r < maxrows; r++ {
 			r1, _ := ws1.GetRow(r)
@@ -73,6 +73,9 @@ func xls2xlsx(xlsfile string) {
 			}
 		}
 	}
+  if len(f2.GetSheetList())>wb1.GetNumberSheets(){
+    f2.DeleteSheet("Sheet1") //NewFile默认新建的Sheet1(必须填写新Sheet后才生效)
+  }
 	fmt.Printf("> %q 转换完成，正在保存...\n", newName)
 	f2.SaveAs(newName)
 	f2.Close()
